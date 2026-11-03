@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="register-page">
+
+    <div class="register-box">
+
+        <h1>Create Account</h1>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="register-row">
+                <label>Username</label>
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    required
+                >
+            </div>
+
+            <div class="register-row">
+                <label>Email</label>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    required
+                >
+            </div>
+
+            <div class="register-row">
+                <label>Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                >
+            </div>
+
+            <button type="submit">
+                Register
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

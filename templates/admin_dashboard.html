@@ -1,0 +1,549 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+
+    <!-- ================================
+         CHART.JS
+         ================================ -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <!-- ================================
+         ADMIN DASHBOARD CSS
+         ================================ -->
+
+    <link rel="stylesheet"
+          href="{% static 'css/admin_dashboard.css' %}">
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard-container">
+
+
+    <!-- ================================
+         HEADER
+         ================================ -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                Admin Dashboard
+            </h1>
+
+            <p>
+                Amazon Clone Administration Panel
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         STATISTICS
+         ================================ -->
+
+    <div class="cards">
+
+
+        <!-- Total Users -->
+
+        <div class="card blue">
+
+            <h2>
+                Total Users
+            </h2>
+
+            <h1>
+                {{ total_users }}
+            </h1>
+
+        </div>
+
+
+        <!-- Total Orders -->
+
+        <div class="card green">
+
+            <h2>
+                Total Orders
+            </h2>
+
+            <h1>
+                {{ total_orders }}
+            </h1>
+
+        </div>
+
+
+        <!-- Total Revenue -->
+
+        <div class="card orange">
+
+            <h2>
+                Total Revenue
+            </h2>
+
+            <h1>
+                ₹{{ total_revenue }}
+            </h1>
+
+        </div>
+
+
+        <!-- Pending Orders -->
+
+        <div class="card purple">
+
+            <h2>
+                Pending Orders
+            </h2>
+
+            <h1>
+                {{ pending_orders }}
+            </h1>
+
+        </div>
+
+
+        <!-- Delivered Orders -->
+
+        <div class="card dark">
+
+            <h2>
+                Delivered
+            </h2>
+
+            <h1>
+                {{ delivered_orders }}
+            </h1>
+
+        </div>
+
+
+        <!-- Cancelled Orders -->
+
+        <div class="card red">
+
+            <h2>
+                Cancelled
+            </h2>
+
+            <h1>
+                {{ cancelled_orders }}
+            </h1>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================================
+         ANALYTICS
+         ================================ -->
+
+    <div class="analytics">
+
+
+        <!-- ================================
+             MONTHLY REVENUE
+             ================================ -->
+
+        <div class="box">
+
+            <h2>
+                📈 Monthly Revenue
+            </h2>
+
+
+            <div class="chart-container">
+
+
+                <canvas
+                    id="salesChart"
+                    data-labels="{{ monthly_labels|escape }}"
+                    data-revenue="{{ monthly_revenue|escape }}">
+                </canvas>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================
+             TOP SELLING PRODUCTS
+             ================================ -->
+
+        <div class="box">
+
+            <h2>
+                🏆 Top Selling Products
+            </h2>
+
+
+            <table class="top-product-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            Sold
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for product in top_products %}
+
+
+                    <tr>
+
+                        <td>
+                            {{ product.product__name }}
+                        </td>
+
+                        <td>
+                            {{ product.total_sold }}
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+
+                    <tr>
+
+                        <td colspan="2"
+                            class="no-data">
+
+                            No Data
+
+                        </td>
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================================
+         LATEST ORDERS
+         ================================ -->
+
+    <div class="table-section">
+
+
+        <h2>
+            📋 Latest Orders
+        </h2>
+
+
+        <div class="table-wrapper">
+
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Order ID
+                        </th>
+
+                        <th>
+                            User
+                        </th>
+
+                        <th>
+                            Total
+                        </th>
+
+                        <th>
+                            Payment
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for order in latest_orders %}
+
+
+                    <tr>
+
+
+                        <!-- Order ID -->
+
+                        <td>
+                            #{{ order.id }}
+                        </td>
+
+
+                        <!-- User -->
+
+                        <td>
+                            {{ order.user.username }}
+                        </td>
+
+
+                        <!-- Total -->
+
+                        <td>
+                            ₹{{ order.total_price }}
+                        </td>
+
+
+                        <!-- Payment Status -->
+
+                        <td>
+
+
+                            {% if order.payment_status == "Paid" %}
+
+
+                                <span class="status status-paid">
+                                    Paid
+                                </span>
+
+
+                            {% elif order.payment_status == "Pending" %}
+
+
+                                <span class="status status-pending">
+                                    Pending
+                                </span>
+
+
+                            {% elif order.payment_status == "Failed" %}
+
+
+                                <span class="status status-failed">
+                                    Failed
+                                </span>
+
+
+                            {% elif order.payment_status == "Refunded" %}
+
+
+                                <span class="status status-refunded">
+                                    Refunded
+                                </span>
+
+
+                            {% else %}
+
+
+                                {{ order.payment_status }}
+
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                        <!-- Order Status -->
+
+                        <td>
+
+
+                            {% if order.order_status == "Order Placed" %}
+
+
+                                <span class="status order-placed">
+                                    Order Placed
+                                </span>
+
+
+                            {% elif order.order_status == "Confirmed" %}
+
+
+                                <span class="status order-confirmed">
+                                    Confirmed
+                                </span>
+
+
+                            {% elif order.order_status == "Packed" %}
+
+
+                                <span class="status order-packed">
+                                    Packed
+                                </span>
+
+
+                            {% elif order.order_status == "Shipped" %}
+
+
+                                <span class="status order-shipped">
+                                    Shipped
+                                </span>
+
+
+                            {% elif order.order_status == "Out for Delivery" %}
+
+
+                                <span class="status order-delivery">
+                                    Out for Delivery
+                                </span>
+
+
+                            {% elif order.order_status == "Delivered" %}
+
+
+                                <span class="status order-delivered">
+                                    Delivered
+                                </span>
+
+
+                            {% elif order.order_status == "Cancelled" %}
+
+
+                                <span class="status order-cancelled">
+                                    Cancelled
+                                </span>
+
+
+                            {% else %}
+
+
+                                {{ order.order_status }}
+
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                        <!-- Date -->
+
+                        <td>
+
+                            {{ order.created_at|date:"d M Y" }}
+
+                        </td>
+
+
+                        <!-- Action -->
+
+                        <td>
+
+
+                            <a
+                                href="{% url 'admin_order_detail' order.id %}"
+                                class="view-btn">
+
+                                View
+
+                            </a>
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% empty %}
+
+
+                    <tr>
+
+                        <td colspan="7"
+                            class="no-data">
+
+                            No Orders Found
+
+                        </td>
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- ================================
+     ADMIN DASHBOARD JAVASCRIPT
+     ================================ -->
+
+<script src="{% static 'js/admin_dashboard.js' %}"></script>
+
+
+</body>
+
+</html>

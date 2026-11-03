@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+My Orders
+{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet"
+      href="{% static 'css/my_orders.css' %}">
+
+<div class="orders-container">
+
+    <div class="orders-header">
+
+        <h1>
+            My Orders
+        </h1>
+
+        <p>
+            Track and manage your orders
+        </p>
+
+    </div>
+
+
+    {% if items %}
+
+        {% for item in items %}
+
+        <div class="order-card">
+
+            <div class="order-top">
+
+                <div>
+
+                    <h2>
+                        Order #{{ item.order.id }}
+                    </h2>
+
+                    <p class="order-date">
+                        {{ item.order.created_at|date:"d M Y, h:i A" }}
+                    </p>
+
+                </div>
+
+
+                <div class="order-total">
+
+                    <span>
+                        Order Total
+                    </span>
+
+                    <strong>
+                        ₹{{ item.order.total_price }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="order-content">
+
+
+                <!-- PRODUCT IMAGE -->
+
+                <div class="product-image-box">
+
+                    <img
+                        src="{{ item.product.image }}"
+                        alt="{{ item.product.name }}"
+                    >
+
+                </div>
+
+
+                <!-- PRODUCT DETAILS -->
+
+                <div class="order-details">
+
+                    <h2>
+                        {{ item.product.name }}
+                    </h2>
+
+
+                    <p>
+                        <strong>Quantity:</strong>
+                        {{ item.quantity }}
+                    </p>
+
+
+                    <p>
+                        <strong>Price:</strong>
+                        ₹{{ item.price }}
+                    </p>
+
+
+                    <p>
+                        <strong>Payment Method:</strong>
+                        {{ item.order.payment_method }}
+                    </p>
+
+
+                    <!-- PAYMENT STATUS -->
+
+                    <p>
+
+                        <strong>
+                            Payment Status:
+                        </strong>
+
+
+                        {% if item.order.payment_status == "Paid" %}
+
+                            <span class="status paid">
+                                🟢 Paid
+                            </span>
+
+                        {% elif item.order.payment_status == "Failed" %}
+
+                            <span class="status failed">
+                                🔴 Failed
+                            </span>
+
+                        {% elif item.order.payment_status == "Refunded" %}
+
+                            <span class="status refunded">
+                                🔄 Refunded
+                            </span>
+
+                        {% else %}
+
+                            <span class="status pending">
+                                🟡 {{ item.order.payment_status }}
+                            </span>
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <!-- ORDER STATUS -->
+
+                    <p>
+
+                        <strong>
+                            Order Status:
+                        </strong>
+
+
+                        {% if item.order.order_status == "Order Placed" %}
+
+                            <span class="status order-placed">
+                                📦 Order Placed
+                            </span>
+
+
+                        {% elif item.order.order_status == "Confirmed" %}
+
+                            <span class="status confirmed">
+                                🔵 Confirmed
+                            </span>
+
+
+                        {% elif item.order.order_status == "Packed" %}
+
+                            <span class="status packed">
+                                📦 Packed
+                            </span>
+
+
+                        {% elif item.order.order_status == "Shipped" %}
+
+                            <span class="status shipped">
+                                🚚 Shipped
+                            </span>
+
+
+                        {% elif item.order.order_status == "Out for Delivery" %}
+
+                            <span class="status delivery">
+                                🚛 Out for Delivery
+                            </span>
+
+
+                        {% elif item.order.order_status == "Delivered" %}
+
+                            <span class="status delivered">
+                                ✅ Delivered
+                            </span>
+
+
+                        {% elif item.order.order_status == "Cancelled" %}
+
+                            <span class="status cancelled">
+                                ❌ Cancelled
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="status">
+                                {{ item.order.order_status }}
+                            </span>
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <!-- ACTION BUTTONS -->
+
+                    <div class="order-actions">
+
+
+                        <a href="{% url 'order_details' item.id %}"
+                           class="view-btn">
+
+                            View Details
+
+                        </a>
+
+
+                        {% if item.order.order_status == "Order Placed" %}
+
+                            <a
+                                href="{% url 'cancel_order' item.order.id %}"
+                                class="cancel-btn"
+                                onclick="return confirm('Are you sure you want to cancel this order?');">
+
+                                Cancel Order
+
+                            </a>
+
+
+                        {% elif item.order.order_status == "Cancelled" %}
+
+                            <button
+                                class="cancelled-btn"
+                                disabled>
+
+                                Order Cancelled
+
+                            </button>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+
+    {% else %}
+
+
+        <!-- EMPTY ORDERS -->
+
+        <div class="empty-orders">
+
+            <div class="empty-icon">
+                📦
+            </div>
+
+            <h2>
+                No Orders Found
+            </h2>
+
+            <p>
+                You haven't placed any orders yet.
+            </p>
+
+            <a href="{% url 'home' %}"
+               class="shop-btn">
+
+                Continue Shopping
+
+            </a>
+
+        </div>
+
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}

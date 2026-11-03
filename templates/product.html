@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ product.name }}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/review.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="product-details">
+
+    <img src="{{ product.image }}" alt="{{ product.name }}">
+
+    <div>
+
+        <h1>{{ product.name }}</h1>
+
+        <p class="product-rating">
+            <span class="star">⭐</span>
+            <span>{{ avg_rating|floatformat:1 }}/5</span>
+
+            <a href="#reviews">
+                ({{ total_reviews }} Review{{ total_reviews|pluralize }})
+            </a>
+        </p>
+
+        <div class="product-price">
+
+            <span class="offer-price">
+                ₹{{ product.price }}
+            </span>
+
+            <span class="original-price">
+                ₹{{ product.original_price }}
+            </span>
+
+            <span class="discount">
+                {{ product.discount }}% OFF
+            </span>
+
+        </div>
+
+        {% if product.stock > 10 %}
+
+            <p class="stock in-stock">
+                ✔ In Stock
+            </p>
+
+        {% elif product.stock > 0 %}
+
+            <p class="stock low-stock">
+                ⚠ Only {{ product.stock }} left in stock
+            </p>
+
+        {% else %}
+
+            <p class="stock out-stock">
+                ❌ Out of Stock
+            </p>
+
+        {% endif %}
+
+        <p>{{ product.description }}</p>
+
+        {% if product.stock > 0 %}
+
+            <a href="{% url 'add_to_cart' product.id %}">
+                <button>Add to Cart</button>
+            </a>
+
+            <br><br>
+
+            <a href="{% url 'buy_now' product.id %}">
+                <button class="buy-now-btn">
+                    Buy Now
+                </button>
+            </a>
+
+        {% else %}
+
+            <button
+                disabled
+                style="
+                    background:#999;
+                    color:#fff;
+                    cursor:not-allowed;
+                    width:220px;
+                    padding:12px;
+                    border:none;
+                    border-radius:6px;
+                ">
+                Out of Stock
+            </button>
+
+            <br><br>
+
+            <button
+                disabled
+                style="
+                    background:#999;
+                    color:#fff;
+                    cursor:not-allowed;
+                    width:220px;
+                    padding:12px;
+                    border:none;
+                    border-radius:6px;
+                ">
+                Buy Now Disabled
+            </button>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<hr>
+
+<div class="review-form">
+
+    <h2>⭐ Write a Review</h2>
+
+    <form method="POST" action="{% url 'add_review' product.id %}">
+        {% csrf_token %}
+
+        <label><b>Rating</b></label>
+
+        <select name="rating">
+            <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+            <option value="4">⭐⭐⭐⭐ (4)</option>
+            <option value="3">⭐⭐⭐ (3)</option>
+            <option value="2">⭐⭐ (2)</option>
+            <option value="1">⭐ (1)</option>
+        </select>
+
+        <textarea
+            name="comment"
+            rows="5"
+            placeholder="Write your review..."
+            required></textarea>
+
+        <button type="submit">
+            Submit Review
+        </button>
+
+    </form>
+
+</div>
+
+<hr>
+
+<div class="review-form" id="reviews">
+
+    <h2>Customer Reviews</h2>
+
+    {% for review in reviews %}
+
+    <div class="review-card">
+
+        <h3>{{ review.user.username }}</h3>
+
+        <p>⭐ {{ review.rating }}/5</p>
+
+        <p>{{ review.comment }}</p>
+
+        <small>{{ review.created_at|date:"d M Y, h:i A" }}</small>
+
+    </div>
+
+    {% empty %}
+
+    <p>No reviews yet.</p>
+
+    {% endfor %}
+
+</div>
+
+<hr>
+
+<section class="related-products">
+
+    <h2>Related Products</h2>
+
+    <div class="related-container">
+
+        {% for item in related_products %}
+
+        <div class="related-card">
+
+            <a href="{% url 'product_detail' item.id %}" class="related-link">
+
+                <img
+                    src="{{ item.image }}"
+                    alt="{{ item.name }}"
+                    class="related-image">
+
+                <h3 class="related-name">
+                    {{ item.name }}
+                </h3>
+
+                <div class="related-price">
+
+                    <span class="related-offer-price">
+                        ₹{{ item.price }}
+                    </span>
+
+                    {% if item.original_price %}
+                    <span class="related-original-price">
+                        ₹{{ item.original_price }}
+                    </span>
+                    {% endif %}
+
+                    {% if item.discount %}
+                    <span class="related-discount">
+                        {{ item.discount }}% OFF
+                    </span>
+                    {% endif %}
+
+                </div>
+
+                <div class="related-rating">
+
+                    ⭐
+                    {% if item.rating %}
+                        {{ item.rating|floatformat:1 }}/5
+                    {% else %}
+                        0.0/5
+                    {% endif %}
+
+                </div>
+
+            </a>
+
+        </div>
+
+        {% empty %}
+
+        <p>No Related Products Available.</p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

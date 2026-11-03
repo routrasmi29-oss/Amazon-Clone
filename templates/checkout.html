@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}
+Checkout
+{% endblock %}
+{% block content %}
+<div class="checkout-container">
+    <div class="checkout-left">
+        <h2>Delivery Address</h2>
+        <form action="{% url 'checkout' %}" method="POST" id="checkout-form">
+            {% csrf_token %}
+            <input type="text" name="fullname" placeholder="Full Name" required>
+            <input type="text" name="mobile" placeholder="Mobile Number" required>
+            <textarea name="address" rows="4" placeholder="Full Address" required></textarea>
+            <input type="text" name="city" placeholder="City" required>
+            <input type="text" name="state" placeholder="State" required>
+            <input type="text" name="pincode" placeholder="Pincode" required>
+        </form>
+    </div>
+    <div class="checkout-right">
+        <h2>Order Summary</h2>
+        <hr>
+        {% for item in cart_items %}
+        <div class="summary-item">
+            <p>{{ item.product.name }}</p>
+            <p>{{ item.quantity }} × ₹{{ item.product.price|floatformat:2 }}</p>
+        </div>
+        {% endfor %}
+        <hr>
+        <h3>Total : ₹{{ total|floatformat:2 }}</h3>
+        {% if coupon_code %}
+        <p style="color:green;font-weight:bold;">
+            Coupon : {{ coupon_code }}
+        </p>
+        <p style="color:red;font-weight:bold;">
+            Discount : -₹{{ discount|floatformat:2 }}
+        </p>
+        {% endif %}
+        <hr>
+        <h2 style="color:#28a745;">
+            Final Total : ₹{{ final_total|floatformat:2 }}
+        </h2>
+        <br>
+        <form action="{% url 'apply_coupon' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="coupon" placeholder="Enter Coupon Code" style="width:100%;padding:12px;margin-bottom:10px;">
+            <button type="submit" style="width:100%;background:#28a745;color:white;padding:12px;border:none;border-radius:5px;cursor:pointer;">
+                Apply Coupon
+            </button>
+        </form>
+        <br>
+        <h2>Select Payment</h2>
+        <label>
+            <input type="radio" name="payment" value="COD" form="checkout-form" checked>
+            Cash on Delivery
+        </label>
+        <br><br>
+        <label>
+            <input type="radio" name="payment" value="UPI" form="checkout-form">
+            UPI
+        </label>
+        <br><br>
+        <label>
+            <input type="radio" name="payment" value="CARD" form="checkout-form">
+            Credit / Debit Card
+        </label>
+        <br><br>
+        <button type="submit" form="checkout-form" class="place-order">
+            Place Orderdone
+        </button>
+    </div>
+</div>
+{% endblock %}

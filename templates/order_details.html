@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Order Details
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/order_details.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="order-details-container">
+
+    <h1>Order Details</h1>
+
+    <div class="cart-card">
+
+        <div class="product-image-box">
+            <img src="{{ item.product.image }}" alt="{{ item.product.name }}">
+        </div>
+
+        <div class="cart-details">
+
+            <h2>{{ item.product.name }}</h2>
+
+            <h3>₹{{ item.price }}</h3>
+
+            <p>
+                <b>Quantity:</b>
+                {{ item.quantity }}
+            </p>
+
+            <p>
+                <b>Total:</b>
+                ₹{{ item.order.total_price }}
+            </p>
+
+            <p>
+                <b>Payment Method:</b>
+                {{ item.order.payment_method }}
+            </p>
+
+            <p>
+                <b>Payment Status:</b>
+
+                {% if item.order.payment_status == "Paid" %}
+                    <span class="status paid">🟢 Paid</span>
+
+                {% elif item.order.payment_status == "Pending" %}
+                    <span class="status pending">🟡 Pending</span>
+
+                {% elif item.order.payment_status == "Failed" %}
+                    <span class="status failed">🔴 Failed</span>
+
+                {% elif item.order.payment_status == "Refunded" %}
+                    <span class="status refunded">💰 Refunded</span>
+
+                {% else %}
+                    <span class="status">
+                        {{ item.order.payment_status }}
+                    </span>
+                {% endif %}
+            </p>
+
+            <p>
+                <b>Order Status:</b>
+
+                {% if item.order.order_status == "Order Placed" %}
+                    <span class="status order-placed">
+                        📦 Order Placed
+                    </span>
+
+                {% elif item.order.order_status == "Confirmed" %}
+                    <span class="status confirmed">
+                        🔵 Confirmed
+                    </span>
+
+                {% elif item.order.order_status == "Packed" %}
+                    <span class="status packed">
+                        📦 Packed
+                    </span>
+
+                {% elif item.order.order_status == "Shipped" %}
+                    <span class="status shipped">
+                        🚚 Shipped
+                    </span>
+
+                {% elif item.order.order_status == "Out for Delivery" %}
+                    <span class="status out-delivery">
+                        🚛 Out for Delivery
+                    </span>
+
+                {% elif item.order.order_status == "Delivered" %}
+                    <span class="status delivered">
+                        ✅ Delivered
+                    </span>
+
+                {% elif item.order.order_status == "Cancelled" %}
+                    <span class="status cancelled">
+                        ❌ Cancelled
+                    </span>
+
+                {% else %}
+                    <span class="status">
+                        {{ item.order.order_status }}
+                    </span>
+                {% endif %}
+            </p>
+
+            <hr>
+
+            <!-- ONLINE PAYMENT -->
+
+            {% if item.order.payment_status == "Pending" and item.order.order_status != "Cancelled" and item.order.order_status != "Delivered" %}
+
+            <div class="online-payment-box">
+
+                <h2>💳 Pay Online</h2>
+
+                <p>
+                    Your payment is currently pending.
+                    You can pay online using UPI or Card.
+                </p>
+
+                <a href="{% url 'pay_online' item.order.id %}"
+                   class="pay-online-btn">
+
+                    💳 Pay ₹{{ item.order.total_price }} Online
+
+                </a>
+
+            </div>
+
+            <hr>
+
+            {% endif %}
+
+            <!-- ORDER TRACKING -->
+
+            <h2>Order Tracking</h2>
+
+            {% if item.order.order_status == "Cancelled" %}
+
+                <div class="cancelled-message">
+                    ❌ This order has been cancelled.
+                </div>
+
+            {% else %}
+
+                <div class="tracking">
+
+                    <div class="tracking-step
+                        {% if item.order.order_status == 'Order Placed' or item.order.order_status == 'Confirmed' or item.order.order_status == 'Packed' or item.order.order_status == 'Shipped' or item.order.order_status == 'Out for Delivery' or item.order.order_status == 'Delivered' %}
+                        active
+                        {% endif %}">
+
+                        <div class="tracking-icon">
+                            📦
+                        </div>
+
+                        <span>
+                            Order Placed
+                        </span>
+
+                    </div>
+
+                    <div class="tracking-line"></div>
+
+                    <div class="tracking-step
+                        {% if item.order.order_status == 'Confirmed' or item.order.order_status == 'Packed' or item.order.order_status == 'Shipped' or item.order.order_status == 'Out for Delivery' or item.order.order_status == 'Delivered' %}
+                        active
+                        {% endif %}">
+
+                        <div class="tracking-icon">
+                            ✔
+                        </div>
+
+                        <span>
+                            Confirmed
+                        </span>
+
+                    </div>
+
+                    <div class="tracking-line"></div>
+
+                    <div class="tracking-step
+                        {% if item.order.order_status == 'Packed' or item.order.order_status == 'Shipped' or item.order.order_status == 'Out for Delivery' or item.order.order_status == 'Delivered' %}
+                        active
+                        {% endif %}">
+
+                        <div class="tracking-icon">
+                            📦
+                        </div>
+
+                        <span>
+                            Packed
+                        </span>
+
+                    </div>
+
+                    <div class="tracking-line"></div>
+
+                    <div class="tracking-step
+                        {% if item.order.order_status == 'Shipped' or item.order.order_status == 'Out for Delivery' or item.order.order_status == 'Delivered' %}
+                        active
+                        {% endif %}">
+
+                        <div class="tracking-icon">
+                            🚚
+                        </div>
+
+                        <span>
+                            Shipped
+                        </span>
+
+                    </div>
+
+                    <div class="tracking-line"></div>
+
+                    <div class="tracking-step
+                        {% if item.order.order_status == 'Out for Delivery' or item.order.order_status == 'Delivered' %}
+                        active
+                        {% endif %}">
+
+                        <div class="tracking-icon">
+                            🚛
+                        </div>
+
+                        <span>
+                            Out for Delivery
+                        </span>
+
+                    </div>
+
+                    <div class="tracking-line"></div>
+
+                    <div class="tracking-step
+                        {% if item.order.order_status == 'Delivered' %}
+                        active
+                        {% endif %}">
+
+                        <div class="tracking-icon">
+                            🎉
+                        </div>
+
+                        <span>
+                            Delivered
+                        </span>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+            <hr>
+
+            <!-- DELIVERY ADDRESS -->
+
+            <h2>Delivery Address</h2>
+
+            <div class="delivery-box">
+
+                <p>
+                    <b>Name:</b>
+                    {{ item.order.full_name }}
+                </p>
+
+                <p>
+                    <b>Phone:</b>
+                    {{ item.order.phone }}
+                </p>
+
+                <p>
+                    <b>Address:</b>
+                    {{ item.order.address }}
+                </p>
+
+            </div>
+
+            <!-- BUTTONS -->
+
+            <div class="action-buttons">
+
+                <a href="{% url 'my_orders' %}" class="view-btn">
+                    ← Back to Orders
+                </a>
+
+                {% if item.order.order_status == "Delivered" %}
+
+                    {% if return_request %}
+
+                        <button
+                            type="button"
+                            class="return-requested-btn"
+                            disabled>
+                            ↩ Return Requested
+                        </button>
+
+                    {% else %}
+
+                        <a
+                            href="{% url 'return_order' id=item.id %}"
+                            class="return-btn">
+                            ↩ Return Order
+                        </a>
+
+                    {% endif %}
+
+                {% endif %}
+
+                <a
+                    href="{% url 'download_invoice' item.id %}"
+                    class="invoice-btn">
+                    📄 Download Invoice
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

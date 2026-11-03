@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+
+<style>
+
+.return-detail-container {
+    width: 92%;
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+.return-detail-container h1 {
+    font-size: 32px;
+    margin-bottom: 25px;
+    color: #172033;
+}
+
+.detail-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+.detail-card h2 {
+    margin-bottom: 20px;
+    color: #172033;
+    font-size: 22px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #555;
+    min-width: 180px;
+}
+
+.detail-value {
+    color: #222;
+    text-align: right;
+    flex: 1;
+}
+
+.status {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.status-requested {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-approved {
+    background: #d1f7df;
+    color: #087f3e;
+}
+
+.status-rejected {
+    background: #f8d7da;
+    color: #842029;
+}
+
+.status-picked {
+    background: #cfe2ff;
+    color: #084298;
+}
+
+.status-refunded {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 12px 22px;
+    background: #27364a;
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.back-btn:hover {
+    background: #172033;
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="return-detail-container">
+
+    <h1>↩ Return Request Details</h1>
+
+    <!-- Return Information -->
+
+    <div class="detail-card">
+
+        <h2>Return Information</h2>
+
+        <div class="detail-row">
+            <div class="detail-label">Return ID</div>
+            <div class="detail-value">
+                #{{ return_request.id }}
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Order ID</div>
+            <div class="detail-value">
+                #{{ return_request.order.id }}
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Reason</div>
+            <div class="detail-value">
+                {{ return_request.get_reason_display }}
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Description</div>
+            <div class="detail-value">
+                {{ return_request.description|default:"No description provided." }}
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Refund Amount</div>
+            <div class="detail-value">
+                ₹{{ return_request.refund_amount }}
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Status</div>
+
+            <div class="detail-value">
+
+                {% if return_request.status == "Requested" %}
+
+                    <span class="status status-requested">
+                        Requested
+                    </span>
+
+                {% elif return_request.status == "Approved" %}
+
+                    <span class="status status-approved">
+                        Approved
+                    </span>
+
+                {% elif return_request.status == "Rejected" %}
+
+                    <span class="status status-rejected">
+                        Rejected
+                    </span>
+
+                {% elif return_request.status == "Picked Up" %}
+
+                    <span class="status status-picked">
+                        Picked Up
+                    </span>
+
+                {% elif return_request.status == "Refunded" %}
+
+                    <span class="status status-refunded">
+                        Refunded
+                    </span>
+
+                {% endif %}
+
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Requested Date</div>
+
+            <div class="detail-value">
+                {{ return_request.created_at|date:"d M Y, h:i A" }}
+            </div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Last Updated</div>
+
+            <div class="detail-value">
+                {{ return_request.updated_at|date:"d M Y, h:i A" }}
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Customer Information -->
+
+    <div class="detail-card">
+
+        <h2>Customer Information</h2>
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Name
+            </div>
+
+            <div class="detail-value">
+                {{ return_request.order.full_name }}
+            </div>
+
+        </div>
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Username
+            </div>
+
+            <div class="detail-value">
+                {{ return_request.order.user.username }}
+            </div>
+
+        </div>
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Phone
+            </div>
+
+            <div class="detail-value">
+                {{ return_request.order.phone }}
+            </div>
+
+        </div>
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Address
+            </div>
+
+            <div class="detail-value">
+                {{ return_request.order.address }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Order Information -->
+
+    <div class="detail-card">
+
+        <h2>Order Information</h2>
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Order Total
+            </div>
+
+            <div class="detail-value">
+                ₹{{ return_request.order.total_price }}
+            </div>
+
+        </div>
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Payment Method
+            </div>
+
+            <div class="detail-value">
+                {{ return_request.order.payment_method }}
+            </div>
+
+        </div>
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Payment Status
+            </div>
+
+            <div class="detail-value">
+                {{ return_request.order.payment_status }}
+            </div>
+
+        </div>
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Order Status
+            </div>
+
+            <div class="detail-value">
+                {{ return_request.order.order_status }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <a href="{% url 'admin_return_requests' %}" class="back-btn">
+        ← Back to Return Requests
+    </a>
+
+</div>
+
+{% endblock %}

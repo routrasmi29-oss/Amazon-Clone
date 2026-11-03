@@ -1,0 +1,132 @@
+.profile-container{
+    width:80%;
+    max-width:700px;
+    margin:40px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,.1);
+}
+.profile-container h1{
+    text-align:center;
+    margin-bottom:30px;
+    color:#111;
+}
+.profile-image{
+    text-align:center;
+    margin-bottom:20px;
+}
+.profile-image img{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid #ff9900;
+}
+.image-buttons{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    align-items:center;
+    margin-top:15px;
+}
+.image-buttons button,
+.image-buttons label{
+    width:140px;
+    height:42px;
+    margin:0;
+    padding:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#232f3e;
+    color:white;
+    border:none;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:15px;
+    box-sizing:border-box;
+}
+.image-buttons button:hover,
+.image-buttons label:hover{
+    background:#131a22;
+}
+.image-buttons input{
+    display:none;
+}
+.profile-container>form>label{
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+    font-size:17px;
+}
+.profile-container input,
+.profile-container textarea{
+    width:100%;
+    padding:12px;
+    margin-top:8px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+    outline:none;
+    box-sizing:border-box;
+}
+.profile-container input:focus,
+.profile-container textarea:focus{
+    border-color:#ff9900;
+}
+.profile-container textarea{
+    resize:none;
+    height:100px;
+}
+.save-button{
+    width:100%;
+    margin-top:25px;
+    padding:15px;
+    background:#FFD814;
+    border:none;
+    border-radius:30px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+.save-button:hover{
+    background:#f7ca00;
+}
+.username-box{
+    text-align:center;
+    margin-bottom:20px;
+    font-size:18px;
+    color:#555;
+}
+.camera-box{
+    display:none;
+    margin-top:20px;
+    text-align:center;
+}
+.camera-box video{
+    width:100%;
+    max-width:400px;
+    border-radius:12px;
+    border:3px solid #ff9900;
+}
+.capture-button{
+    margin-top:15px;
+    padding:12px 25px;
+    background:#232f3e;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+.capture-button:hover{
+    background:#131a22;
+}
+#canvas{
+    display:none;
+}
+#camera-image{
+    display:none;
+}

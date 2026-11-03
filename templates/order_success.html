@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}
+Order Success
+{% endblock %}
+{% block content %}
+<div style="text-align:center;padding:80px;">
+<h1 style="color:green;">✅ Order Placed Successfully!</h1>
+<h3>Thank you for shopping with Amazon Clone.</h3>
+{% if order %}
+<p><b>Order ID:</b> #{{ order.id }}</p>
+<p><b>Total Amount:</b> ₹{{ order.total_price }}</p>
+<p><b>Payment:</b> {{ order.payment_method }}</p>
+<p><b>Payment Status:</b> {{ order.payment_status }}</p>
+<p><b>Order Status:</b> {{ order.order_status }}</p>
+{% endif %}
+<br>
+<a href="{% url 'my_orders' %}">
+<button style="padding:15px 30px;">View My Orders</button>
+</a>
+<a href="{% url 'home' %}">
+<button style="padding:15px 30px;">Continue Shopping</button>
+</a>
+</div>
+{% endblock %}

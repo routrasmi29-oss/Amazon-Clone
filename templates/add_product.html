@@ -1,0 +1,243 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Product</title>
+
+    <link rel="stylesheet" href="{% static 'css/add_product.css' %}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="page-header">
+
+        <h1>Add New Product</h1>
+
+        <a href="{% url 'admin_products' %}" class="back-btn">
+            Back to Products
+        </a>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+    <div class="form-card">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- PRODUCT NAME -->
+            <div class="form-group">
+
+                <label for="name">
+                    Product Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter product name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- CATEGORY -->
+            <div class="form-group">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <select
+                    name="category"
+                    id="category"
+                    required
+                >
+
+                    <option value="">
+                        Select Category
+                    </option>
+
+                    <option value="Shoes">
+                        Shoes
+                    </option>
+
+                    <option value="Fashion">
+                        Fashion
+                    </option>
+
+                    <option value="Mobiles">
+                        Mobiles
+                    </option>
+
+                    <option value="Laptops">
+                        Laptops
+                    </option>
+
+                    <option value="Headphones">
+                        Headphones
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- PRICE -->
+            <div class="form-group">
+
+                <label for="price">
+                    Price
+                </label>
+
+                <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    placeholder="Enter selling price"
+                    step="0.01"
+                    min="0"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ORIGINAL PRICE -->
+            <div class="form-group">
+
+                <label for="original_price">
+                    Original Price
+                </label>
+
+                <input
+                    type="number"
+                    id="original_price"
+                    name="original_price"
+                    placeholder="Enter original price"
+                    step="0.01"
+                    min="0"
+                >
+
+            </div>
+
+
+            <!-- DISCOUNT -->
+            <div class="form-group">
+
+                <label for="discount">
+                    Discount (%)
+                </label>
+
+                <input
+                    type="number"
+                    id="discount"
+                    name="discount"
+                    value="0"
+                    min="0"
+                    max="100"
+                >
+
+            </div>
+
+
+            <!-- STOCK -->
+            <div class="form-group">
+
+                <label for="stock">
+                    Stock
+                </label>
+
+                <input
+                    type="number"
+                    id="stock"
+                    name="stock"
+                    value="10"
+                    min="0"
+                    required
+                >
+
+            </div>
+
+
+            <!-- IMAGE URL -->
+            <div class="form-group">
+
+                <label for="image">
+                    Image URL
+                </label>
+
+                <input
+                    type="url"
+                    id="image"
+                    name="image"
+                    placeholder="https://example.com/product.jpg"
+                    required
+                >
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Enter product description"
+                    rows="6"
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+            <div class="form-actions">
+
+                <a
+                    href="{% url 'admin_products' %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="add-product-btn"
+                >
+                    Add Product
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

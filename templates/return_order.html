@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Return Order
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/return_order.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="return-container">
+
+    <h1>Return Order</h1>
+
+    <div class="return-card">
+
+        <div class="return-product">
+
+            <img
+                src="{{ item.product.image }}"
+                alt="{{ item.product.name }}"
+            >
+
+            <div>
+
+                <h2>
+                    {{ item.product.name }}
+                </h2>
+
+                <p>
+                    <b>Quantity:</b>
+                    {{ item.quantity }}
+                </p>
+
+                <p>
+                    <b>Price:</b>
+                    ₹{{ item.price }}
+                </p>
+
+                <p>
+                    <b>Order Total:</b>
+                    ₹{{ order.total_price }}
+                </p>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <form
+            method="POST"
+            action="{% url 'return_order' id=item.id %}"
+        >
+
+            {% csrf_token %}
+
+            <label for="reason">
+                Select Return Reason
+            </label>
+
+            <select
+                name="reason"
+                id="reason"
+                required
+            >
+
+                <option value="">
+                    Select a reason
+                </option>
+
+                {% for value, label in reasons %}
+
+                <option value="{{ value }}">
+                    {{ label }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <label for="description">
+                Additional Details
+            </label>
+
+            <textarea
+                name="description"
+                id="description"
+                rows="5"
+                placeholder="Explain the reason for return..."
+            ></textarea>
+
+            <div class="return-info">
+
+                <p>
+                    <b>Refund Amount:</b>
+                    ₹{{ order.total_price }}
+                </p>
+
+                <p>
+                    Your return request will be reviewed by the admin.
+                </p>
+
+            </div>
+
+            <div class="return-actions">
+
+                <a
+                    href="{% url 'order_details' item.id %}"
+                    class="back-btn"
+                >
+                    ← Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="submit-return-btn"
+                >
+                    Submit Return Request
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

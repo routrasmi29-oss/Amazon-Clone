@@ -1,0 +1,217 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Order Details</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/admin_order_details.css' %}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="page-header">
+
+        <h1>Admin Order Details</h1>
+
+        <a href="{% url 'admin_orders' %}"
+           class="back-btn">
+            ← Back to Orders
+        </a>
+
+    </div>
+
+
+    <!-- ORDER HEADER -->
+
+    <div class="order-header">
+
+        <div>
+
+            <h2>
+                Order #{{ order.id }}
+            </h2>
+
+            <p>
+                {{ order.created_at|date:"d M Y, h:i A" }}
+            </p>
+
+        </div>
+
+        <div class="status-badge">
+
+            {{ order.order_status }}
+
+        </div>
+
+    </div>
+
+
+    <!-- CUSTOMER INFORMATION -->
+
+    <div class="section">
+
+        <h2>Customer Information</h2>
+
+        <div class="details-grid">
+
+            <div>
+                <strong>Name</strong>
+                <span>{{ order.full_name }}</span>
+            </div>
+
+            <div>
+                <strong>Username</strong>
+                <span>{{ order.user.username }}</span>
+            </div>
+
+            <div>
+                <strong>Phone</strong>
+                <span>{{ order.phone }}</span>
+            </div>
+
+            <div class="full-width">
+                <strong>Delivery Address</strong>
+                <span>{{ order.address }}</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ORDER INFORMATION -->
+
+    <div class="section">
+
+        <h2>Order Information</h2>
+
+        <div class="details-grid">
+
+            <div>
+                <strong>Total Amount</strong>
+                <span>₹{{ order.total_price }}</span>
+            </div>
+
+            <div>
+                <strong>Payment Method</strong>
+                <span>{{ order.payment_method }}</span>
+            </div>
+
+            <div>
+                <strong>Payment Status</strong>
+                <span>{{ order.payment_status }}</span>
+            </div>
+
+            <div>
+                <strong>Order Status</strong>
+                <span>{{ order.order_status }}</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ORDER TRACKING -->
+
+    <div class="section">
+
+        <h2>Order Tracking</h2>
+
+        <div class="tracking">
+
+            {% for value, label in statuses %}
+
+                <div class="tracking-item
+                    {% if order.order_status == value %}
+                        active
+                    {% endif %}
+                ">
+
+                    <div class="tracking-dot"></div>
+
+                    <div class="tracking-text">
+
+                        {{ label }}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- UPDATE STATUS -->
+
+    {% if order.order_status != "Cancelled" and order.order_status != "Delivered" %}
+
+    <div class="section">
+
+        <h2>Update Order Status</h2>
+
+        <form method="POST"
+              action="{% url 'update_order_status' order.id %}"
+              class="update-form">
+
+            {% csrf_token %}
+
+            <select name="order_status">
+
+                {% for value, label in statuses %}
+
+                    <option value="{{ value }}"
+                        {% if order.order_status == value %}
+                            selected
+                        {% endif %}>
+
+                        {{ label }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit">
+                Update Status
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- ACTIONS -->
+
+    <div class="actions">
+
+        <a href="{% url 'admin_orders' %}"
+           class="back-btn">
+            ← Back to Orders
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

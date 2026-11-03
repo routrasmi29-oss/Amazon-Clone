@@ -1,0 +1,357 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Order Management</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/admin_orders.css' %}">
+
+</head>
+
+<body>
+
+
+<!-- ================================
+     PAGE TITLE
+     ================================ -->
+
+<h1>Admin Order Management</h1>
+
+
+<!-- ================================
+     STATISTICS
+     ================================ -->
+
+<div class="stats-container">
+
+    <!-- Total Orders -->
+
+    <div class="stat-card">
+
+        <h3>Total Orders</h3>
+
+        <p>
+            {{ total_orders }}
+        </p>
+
+    </div>
+
+
+    <!-- Pending Orders -->
+
+    <div class="stat-card pending">
+
+        <h3>Pending</h3>
+
+        <p>
+            {{ pending_orders }}
+        </p>
+
+    </div>
+
+
+    <!-- Delivered Orders -->
+
+    <div class="stat-card delivered">
+
+        <h3>Delivered</h3>
+
+        <p>
+            {{ delivered_orders }}
+        </p>
+
+    </div>
+
+
+    <!-- Cancelled Orders -->
+
+    <div class="stat-card cancelled">
+
+        <h3>Cancelled</h3>
+
+        <p>
+            {{ cancelled_orders }}
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ================================
+     SEARCH & FILTER
+     ================================ -->
+
+<form method="GET"
+      class="filter-form">
+
+    <!-- Search -->
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search Order ID, Customer or Username"
+        value="{{ search }}"
+    >
+
+
+    <!-- Status Filter -->
+
+    <select name="status">
+
+        <option value="">
+            All Status
+        </option>
+
+        {% for value, label in statuses %}
+
+            <option
+                value="{{ value }}"
+                {% if selected_status == value %}
+                    selected
+                {% endif %}
+            >
+
+                {{ label }}
+
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <!-- Search Button -->
+
+    <button type="submit">
+
+        Search
+
+    </button>
+
+
+    <!-- Clear Button -->
+
+    <a href="{% url 'admin_orders' %}"
+       class="clear-btn">
+
+        Clear
+
+    </a>
+
+</form>
+
+
+<!-- ================================
+     ORDERS
+     ================================ -->
+
+{% if orders %}
+
+
+    {% for order in orders %}
+
+
+        <!-- ================================
+             ORDER CARD
+             ================================ -->
+
+        <div class="order-card">
+
+
+            <!-- ================================
+                 ORDER HEADER
+                 ================================ -->
+
+            <div class="order-header">
+
+                <h2>
+                    Order #{{ order.id }}
+                </h2>
+
+                <span class="order-date">
+
+                    {{ order.created_at|date:"d M Y, h:i A" }}
+
+                </span>
+
+            </div>
+
+
+            <!-- ================================
+                 ORDER DETAILS
+                 ================================ -->
+
+            <div class="details">
+
+                <strong>
+                    Customer:
+                </strong>
+
+                {{ order.full_name }}
+
+                <br>
+
+
+                <strong>
+                    Username:
+                </strong>
+
+                {{ order.user.username }}
+
+                <br>
+
+
+                <strong>
+                    Phone:
+                </strong>
+
+                {{ order.phone }}
+
+                <br>
+
+
+                <strong>
+                    Address:
+                </strong>
+
+                {{ order.address }}
+
+                <br>
+
+
+                <strong>
+                    Total Amount:
+                </strong>
+
+                ₹{{ order.total_price }}
+
+                <br>
+
+
+                <strong>
+                    Payment Method:
+                </strong>
+
+                {{ order.payment_method }}
+
+                <br>
+
+
+                <strong>
+                    Payment Status:
+                </strong>
+
+                {{ order.payment_status }}
+
+                <br>
+
+
+                <strong>
+                    Order Status:
+                </strong>
+
+                <span class="order-status">
+
+                    {{ order.order_status }}
+
+                </span>
+
+            </div>
+
+
+            <!-- ================================
+                 UPDATE STATUS
+                 ================================ -->
+
+            {% if order.order_status != "Cancelled" and order.order_status != "Delivered" %}
+
+
+                <form method="POST"
+                      action="{% url 'update_order_status' order.id %}"
+                      class="status-form">
+
+                    {% csrf_token %}
+
+
+                    <select name="order_status">
+
+                        {% for value, label in statuses %}
+
+                            <option
+                                value="{{ value }}"
+                                {% if order.order_status == value %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ label }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+
+                    <button type="submit">
+
+                        Update Status
+
+                    </button>
+
+                </form>
+
+
+            {% endif %}
+
+
+            <!-- ================================
+                 VIEW DETAILS
+                 ================================ -->
+
+            <a href="{% url 'admin_order_detail' order.id %}"
+               class="view-details-btn">
+
+                View Details
+
+            </a>
+
+
+        </div>
+
+
+    {% endfor %}
+
+
+{% else %}
+
+
+    <!-- ================================
+         NO ORDERS
+         ================================ -->
+
+    <div class="empty">
+
+        <h2>
+            No Orders Found
+        </h2>
+
+    </div>
+
+
+{% endif %}
+
+
+</body>
+
+</html>

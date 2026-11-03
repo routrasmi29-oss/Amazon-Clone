@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Amazon Clone{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=10">
+
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+
+    <meta name="theme-color" content="#131921">
+
+    {% block extra_css %}
+    {% endblock %}
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="nav-top">
+
+        <button type="button" class="hamburger" id="hamburgerButton">
+            ☰
+        </button>
+
+        <div class="logo">
+            <h2>amazon</h2>
+        </div>
+
+    </div>
+
+
+    <div class="search-wrapper">
+
+        <form class="search" method="GET" action="{% url 'home' %}" id="searchForm">
+
+            <input
+                type="text"
+                name="q"
+                id="searchInput"
+                placeholder="Search Amazon"
+                value="{{ query|default:'' }}"
+                autocomplete="off"
+            >
+
+            <button type="button" id="voiceSearchButton" title="Voice Search">
+                🎤
+            </button>
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+        <div id="searchSuggestions" class="search-suggestions"></div>
+
+    </div>
+
+
+    <div class="menu">
+
+        <button type="button" class="alexa-button alexa-button-desktop">
+            🔵 Alexa
+        </button>
+
+        {% if user.is_authenticated %}
+
+            <a href="#">
+                Hello, {{ user.username }}
+            </a>
+
+            <a href="{% url 'profile' %}">
+                Profile
+            </a>
+
+            <a href="{% url 'cart' %}">
+                Cart
+            </a>
+
+            <a href="{% url 'wishlist' %}">
+                Wishlist
+            </a>
+
+            <a href="{% url 'my_orders' %}">
+                My Orders
+            </a>
+
+            <a href="{% url 'logout' %}">
+                Logout
+            </a>
+
+        {% else %}
+
+            <a href="{% url 'register' %}">
+                Register
+            </a>
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</header>
+
+
+<!-- MENU OVERLAY -->
+
+<div class="menu-overlay" id="menuOverlay"></div>
+
+
+<!-- SIDE MENU -->
+
+<aside class="side-menu" id="sideMenu">
+
+    <div class="side-menu-header">
+
+        <h3>Menu</h3>
+
+        <button type="button" class="close-menu" id="closeMenu">
+            ✕
+        </button>
+
+    </div>
+
+
+    <div class="side-menu-links">
+
+        <a href="{% url 'home' %}">
+            🏠 Home
+        </a>
+
+
+        <!-- MOBILE ALEXA -->
+
+        <button type="button" class="alexa-button alexa-button-mobile">
+            🔵 Alexa
+        </button>
+
+
+        {% if user.is_authenticated %}
+
+            <a href="#">
+                👤 Hello, {{ user.username }}
+            </a>
+
+            <a href="{% url 'profile' %}">
+                👤 Profile
+            </a>
+
+            <a href="{% url 'cart' %}">
+                🛒 Cart
+            </a>
+
+            <a href="{% url 'wishlist' %}">
+                ❤️ Wishlist
+            </a>
+
+            <a href="{% url 'my_orders' %}">
+                📦 My Orders
+            </a>
+
+            <a href="{% url 'logout' %}">
+                🚪 Logout
+            </a>
+
+        {% else %}
+
+            <a href="{% url 'register' %}">
+                Register
+            </a>
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</aside>
+
+
+{% block content %}
+{% endblock %}
+
+
+<script>
+window.voiceUrls = {
+    home: "{% url 'home' %}",
+    cart: "{% url 'cart' %}",
+    wishlist: "{% url 'wishlist' %}",
+    profile: "{% url 'profile' %}",
+    my_orders: "{% url 'my_orders' %}",
+    admin_dashboard: "{% url 'admin_dashboard' %}",
+    admin_products: "{% url 'admin_products' %}",
+    admin_orders: "{% url 'admin_orders' %}"
+};
+
+window.liveSearchUrl = "{% url 'live_search' %}";
+</script>
+
+
+<script src="{% static 'js/script.js' %}?v=10"></script>
+
+</body>
+</html>

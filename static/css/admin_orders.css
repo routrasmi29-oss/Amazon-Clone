@@ -1,0 +1,377 @@
+/* ================================
+   ADMIN ORDER MANAGEMENT
+   ================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f3f3;
+    margin: 0;
+    padding: 30px;
+    color: #111;
+}
+
+/* ================================
+   PAGE TITLE
+   ================================ */
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 32px;
+}
+
+
+/* ================================
+   STATISTICS
+   ================================ */
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 22px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    border-top: 5px solid #232f3e;
+}
+
+.stat-card h3 {
+    margin: 0;
+    color: #555;
+    font-size: 18px;
+}
+
+.stat-card p {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 10px 0 0;
+    color: #111;
+}
+
+.stat-card.pending {
+    border-top-color: #f39c12;
+}
+
+.stat-card.pending p {
+    color: #f39c12;
+}
+
+.stat-card.delivered {
+    border-top-color: #27ae60;
+}
+
+.stat-card.delivered p {
+    color: #27ae60;
+}
+
+.stat-card.cancelled {
+    border-top-color: #e74c3c;
+}
+
+.stat-card.cancelled p {
+    color: #e74c3c;
+}
+
+
+/* ================================
+   SEARCH & FILTER
+   ================================ */
+
+.filter-form {
+    max-width: 1200px;
+    margin: 0 auto 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+}
+
+.filter-form input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+    outline: none;
+}
+
+.filter-form input:focus {
+    border-color: #ff9900;
+}
+
+.filter-form select {
+    width: 220px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+    background: white;
+    cursor: pointer;
+}
+
+.filter-form button {
+    padding: 12px 22px;
+    background: #ff9900;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.filter-form button:hover {
+    background: #e68a00;
+}
+
+.clear-btn {
+    background: #ddd;
+    color: #222;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.clear-btn:hover {
+    background: #ccc;
+}
+
+
+/* ================================
+   ORDER CARD
+   ================================ */
+
+.order-card {
+    background: white;
+    max-width: 1200px;
+    margin: 0 auto 20px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ================================
+   ORDER HEADER
+   ================================ */
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.order-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.order-date {
+    font-weight: bold;
+    color: #555;
+}
+
+
+/* ================================
+   ORDER DETAILS
+   ================================ */
+
+.details {
+    line-height: 1.9;
+    font-size: 16px;
+}
+
+.details strong {
+    color: #333;
+}
+
+
+/* ================================
+   ORDER STATUS
+   ================================ */
+
+.order-status {
+    font-weight: bold;
+}
+
+.status-placed {
+    color: #e67e22;
+}
+
+.status-confirmed {
+    color: #2980b9;
+}
+
+.status-packed {
+    color: #8e44ad;
+}
+
+.status-shipped {
+    color: #16a085;
+}
+
+.status-delivery {
+    color: #d35400;
+}
+
+.status-delivered {
+    color: #27ae60;
+}
+
+.status-cancelled {
+    color: #e74c3c;
+}
+
+
+/* ================================
+   STATUS FORM
+   ================================ */
+
+.status-form {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-form select {
+    padding: 10px;
+    width: 220px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    background: white;
+    font-size: 15px;
+}
+
+.status-form button {
+    padding: 10px 18px;
+    background: #ff9900;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.status-form button:hover {
+    background: #e68a00;
+}
+
+
+/* ================================
+   EMPTY ORDERS
+   ================================ */
+
+.empty {
+    max-width: 1200px;
+    margin: 30px auto;
+    text-align: center;
+    background: white;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+}
+
+.empty h2 {
+    color: #555;
+}
+
+
+/* ================================
+   RESPONSIVE
+   ================================ */
+
+@media (max-width: 900px) {
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filter-form {
+        flex-wrap: wrap;
+    }
+
+    .filter-form input {
+        width: 100%;
+        flex: none;
+    }
+
+    .filter-form select {
+        flex: 1;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-form input,
+    .filter-form select,
+    .filter-form button,
+    .clear-btn {
+        width: 100%;
+    }
+
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .status-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .status-form select,
+    .status-form button {
+        width: 100%;
+    }
+}
+.view-details-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #232f3e;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.view-details-btn:hover {
+    background: #131a22;
+}

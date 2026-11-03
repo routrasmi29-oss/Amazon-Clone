@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+My Cart
+{% endblock %}
+
+{% block content %}
+
+<div class="cart-container">
+
+    <h1>Shopping Cart</h1>
+
+    {% if cart_items %}
+
+        {% for item in cart_items %}
+
+        <div class="cart-card">
+
+            <img src="{{ item.product.image }}" alt="{{ item.product.name }}">
+
+            <div class="cart-details">
+
+                <h2>{{ item.product.name }}</h2>
+
+                <h3>₹{{ item.product.price }}</h3>
+
+                <div class="quantity">
+
+                    <a href="{% url 'decrease_quantity' item.id %}">
+                        <button>-</button>
+                    </a>
+
+                    <span>{{ item.quantity }}</span>
+
+                    <a href="{% url 'increase_quantity' item.id %}">
+                        <button>+</button>
+                    </a>
+
+                </div>
+
+                <h4>
+                    Total : ₹{{ item.subtotal }}
+                </h4>
+                <a href="{% url 'remove_from_cart' item.id %}">
+                    <button class="remove-btn">🗑 Remove</button>
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+        <div class="grand-total">
+
+            <h2>Grand Total : ₹{{ total }}</h2>
+            <a href="{% url 'checkout' %}">
+                <button>Proceed To Checkout</button>
+            </a>
+        </div>
+
+    {% else %}
+
+        <h2>Your Cart is Empty</h2>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

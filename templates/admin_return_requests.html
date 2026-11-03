@@ -1,0 +1,438 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Return Requests
+{% endblock %}
+
+{% block extra_css %}
+<style>
+
+    .return-container {
+        width: 95%;
+        margin: 40px auto;
+    }
+
+    .return-container h1 {
+        font-size: 32px;
+        color: #1f2937;
+        margin-bottom: 25px;
+    }
+
+    .filter-box {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    }
+
+    .filter-box form {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .filter-box select {
+        padding: 11px 15px;
+        border: 1px solid #ddd;
+        border-radius: 7px;
+        font-size: 15px;
+    }
+
+    .filter-btn {
+        padding: 11px 20px;
+        border: none;
+        border-radius: 7px;
+        background: #2563eb;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .reset-btn {
+        padding: 11px 20px;
+        border-radius: 7px;
+        background: #374151;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .table-box {
+        background: white;
+        border-radius: 12px;
+        overflow-x: auto;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1100px;
+    }
+
+    th {
+        background: #1f2937;
+        color: white;
+        padding: 15px;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    td {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        vertical-align: top;
+    }
+
+    tr:hover {
+        background: #f9fafb;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .requested {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .approved {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .rejected {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .picked-up {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .refunded {
+        background: #ede9fe;
+        color: #5b21b6;
+    }
+
+    .action-form {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .action-form select {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+    }
+
+    .update-btn {
+        padding: 8px 13px;
+        background: #16a34a;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .details-btn {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 8px 13px;
+        background: #2563eb;
+        color: white;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 40px;
+        color: #777;
+        font-size: 18px;
+    }
+
+    .description {
+        max-width: 250px;
+        word-wrap: break-word;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="return-container">
+
+    <h1>↩ Return Requests</h1>
+
+    <!-- FILTER -->
+
+    <div class="filter-box">
+
+        <form method="GET">
+
+            <select name="status">
+
+                <option value="">
+                    All Return Requests
+                </option>
+
+                {% for value, label in return_statuses %}
+
+                    <option
+                        value="{{ value }}"
+                        {% if selected_status == value %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ label }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit" class="filter-btn">
+                Filter
+            </button>
+
+            <a
+                href="{% url 'admin_return_requests' %}"
+                class="reset-btn">
+                Reset
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <!-- RETURN REQUEST TABLE -->
+
+    <div class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Return ID</th>
+
+                    <th>Order ID</th>
+
+                    <th>Customer</th>
+
+                    <th>Reason</th>
+
+                    <th>Description</th>
+
+                    <th>Refund Amount</th>
+
+                    <th>Requested Date</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for return_request in return_requests %}
+
+                <tr>
+
+                    <td>
+                        #{{ return_request.id }}
+                    </td>
+
+
+                    <td>
+                        #{{ return_request.order.id }}
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ return_request.order.full_name }}
+                        </strong>
+
+                        <br>
+
+                        {{ return_request.order.user.username }}
+
+                        <br>
+
+                        {{ return_request.order.phone }}
+
+                    </td>
+
+
+                    <td>
+                        {{ return_request.reason }}
+                    </td>
+
+
+                    <td class="description">
+
+                        {% if return_request.description %}
+
+                            {{ return_request.description }}
+
+                        {% else %}
+
+                            No description
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        ₹{{ return_request.refund_amount }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ return_request.created_at|date:"d M Y, h:i A" }}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if return_request.status == "Requested" %}
+
+                            <span class="status requested">
+                                Requested
+                            </span>
+
+                        {% elif return_request.status == "Approved" %}
+
+                            <span class="status approved">
+                                Approved
+                            </span>
+
+                        {% elif return_request.status == "Rejected" %}
+
+                            <span class="status rejected">
+                                Rejected
+                            </span>
+
+                        {% elif return_request.status == "Picked Up" %}
+
+                            <span class="status picked-up">
+                                Picked Up
+                            </span>
+
+                        {% elif return_request.status == "Refunded" %}
+
+                            <span class="status refunded">
+                                Refunded
+                            </span>
+
+                        {% else %}
+
+                            <span class="status">
+                                {{ return_request.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <form
+                            method="POST"
+                            action="{% url 'update_return_status' return_request.id %}"
+                            class="action-form">
+
+                            {% csrf_token %}
+
+                            <select name="status">
+
+                                {% for value, label in return_statuses %}
+
+                                    <option
+                                        value="{{ value }}"
+                                        {% if return_request.status == value %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        {{ label }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                            <button
+                                type="submit"
+                                class="update-btn">
+
+                                Update
+
+                            </button>
+
+                        </form>
+
+
+                        <a
+                            href="{% url 'admin_return_detail' return_request.id %}"
+                            class="details-btn">
+
+                            View Details
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="no-data">
+
+                        No return requests found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

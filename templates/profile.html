@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+My Profile
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="profile-container">
+
+    <h1>My Profile</h1>
+
+    <div class="username-box">
+        <strong>Username :</strong> {{ request.user.username }}
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        <div class="profile-image">
+
+            {% if profile.profile_image and profile.profile_image.name != "profile_images/default.png" %}
+                <img id="profile-preview" src="{{ profile.profile_image.url }}" alt="Profile">
+            {% else %}
+                <img id="profile-preview" src="{% static 'images/default-profile.png' %}" alt="Profile">
+            {% endif %}
+            <div class="image-buttons">
+
+                <button
+                    type="button"
+                    onclick="openCamera()"
+                >
+                    📷 Camera
+                </button>
+
+                <label>
+                    📁 Choose File
+                    <input
+                        type="file"
+                        name="profile_image"
+                        accept="image/*"
+                        onchange="previewImage(this)"
+                    >
+                </label>
+
+            </div>
+
+            <div
+                class="camera-box"
+                id="camera-box"
+            >
+
+                <video
+                    id="camera"
+                    autoplay
+                    playsinline
+                ></video>
+
+                <button
+                    type="button"
+                    class="capture-button"
+                    onclick="capturePhoto()"
+                >
+                    📸 Capture Photo
+                </button>
+
+                <canvas
+                    id="canvas"
+                ></canvas>
+
+            </div>
+
+            <input
+                type="file"
+                name="camera_image"
+                id="camera-image"
+            >
+
+        </div>
+
+        <label>Full Name</label>
+
+        <input
+            type="text"
+            name="fullname"
+            value="{{ request.user.first_name }}"
+            placeholder="Enter Full Name"
+        >
+
+        <label>Email</label>
+
+        <input
+            type="email"
+            name="email"
+            value="{{ request.user.email }}"
+            placeholder="Enter Email"
+        >
+
+        <label>Mobile</label>
+
+        <input
+            type="text"
+            name="mobile"
+            value="{{ profile.mobile }}"
+            placeholder="Enter Mobile Number"
+        >
+
+        <label>Address</label>
+
+        <textarea
+            name="address"
+            placeholder="Enter Address"
+        >{{ profile.address }}</textarea>
+
+        <label>City</label>
+
+        <input
+            type="text"
+            name="city"
+            value="{{ profile.city }}"
+            placeholder="Enter City"
+        >
+
+        <label>State</label>
+
+        <input
+            type="text"
+            name="state"
+            value="{{ profile.state }}"
+            placeholder="Enter State"
+        >
+
+        <label>Pincode</label>
+
+        <input
+            type="text"
+            name="pincode"
+            value="{{ profile.pincode }}"
+            placeholder="Enter Pincode"
+        >
+
+        <button
+            type="submit"
+            class="save-button"
+        >
+            Save Profile
+        </button>
+
+    </form>
+
+</div>
+
+<script src="{% static 'js/profile.js' %}"></script>
+
+{% endblock %}
